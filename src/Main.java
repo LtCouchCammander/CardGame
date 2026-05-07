@@ -3,11 +3,13 @@ public class Main {
         Player p1 = new Player("Aang");
         Player p2 = new Player("SpongeBob");
         Player p3 = new Player("Michelangelo");
+        Player p4 = new Player("Hnas");
 
         Game game = new Game();
         game.registerPlayer(p1);
         game.registerPlayer(p2);
         game.registerPlayer(p3);
+        game.registerPlayer(p4);
 
         game.run();
     }

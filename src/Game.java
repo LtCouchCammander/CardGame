@@ -29,6 +29,9 @@ public class Game {
     private ArrayList<Card> mixedDeck; // contains a mix of all types of cards
     private ArrayList<DealsDamage> damageDeck; // contains only cards that implement DealsDamage
 
+    private ArrayList<Player> team1;
+    private ArrayList<Player> team2;
+
     // ------ End of Game Objects ----- //
 
 
@@ -51,6 +54,22 @@ public class Game {
     }
 
     public void run() {
+
+        // Display Players and Teams
+        int index1 = Rand.randomInt(0, 4);
+        int index2 = Rand.randomInt(0, 4);
+        if (index1 != index2) {
+            team1.add(players.get(index1));
+            team1.add(players.get(index2));
+        }
+
+
+        System.out.println("");
+        System.out.println("Players & Teams: ");
+        for (int i = 0; i < players.size(); i++) {
+            Player hold = players.get(i);
+            System.out.println(hold.getName());
+        }
 
         // deal cards to each player
         int cardsAdded = 0;
