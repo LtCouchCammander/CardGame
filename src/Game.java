@@ -136,6 +136,8 @@ public class Game {
             }
 
             Input.waitForUserToPressEnter("\nPress Enter to end " + currentPlayer.getName() + "'s turn.\n");
+            System.out.println("");
+            System.out.println("-------------------------------------------------------------------------------------------------------------------");
         }
 
         // End game: determine which Player had the most points
