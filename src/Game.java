@@ -264,10 +264,13 @@ public class Game {
     }
 
     private void declareWinner() {
+        /*
         int highestScore = 0;
         Player playerWithHighestScore = null;
 
         System.out.println("\nFinal Scoreboard:");
+
+        // PLAYER
         for (int i = 0; i < players.size(); i++) {
             Player p = players.get(i);
             System.out.println(p.getName() + ": " + p.getNumPoints());
@@ -279,6 +282,34 @@ public class Game {
             }
         }
 
-        System.out.println("Player '" + playerWithHighestScore.getName() + "' wins!");
+         */
+
+        // TEAM
+        int team1Score = 0;
+        int team2Score = 0;
+        System.out.println("\nFinal Scoreboard: ");
+        System.out.println("Team 1: ");
+        for (int i = 0; i < team1.size(); i++) {
+            Player p = team1.get(i);
+            System.out.println(p.getName() + " - " + p.getNumPoints());
+            team1Score += p.getNumPoints();
+        }
+
+        System.out.println("Team 2: ");
+        for (int i = 0; i < team2.size(); i++) {
+            Player p = team2.get(i);
+            System.out.println(p.getName() + " - " + p.getNumPoints());
+            team2Score += p.getNumPoints();
+        }
+
+        if (team1Score < team2Score) {
+            System.out.println("Team 2 Wins with " + team2Score + " Points!");
+        }
+        else {
+            System.out.println("Team 1 Wins with " + team1Score + " Points!");
+        }
+
+
+        //System.out.println("Player '" + playerWithHighestScore.getName() + "' wins!");
     }
 }
