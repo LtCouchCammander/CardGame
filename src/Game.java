@@ -29,10 +29,14 @@ public class Game {
     private ArrayList<Card> mixedDeck; // contains a mix of all types of cards
     private ArrayList<DealsDamage> damageDeck; // contains only cards that implement DealsDamage
 
+    private ArrayList<Player> team1;
+    private ArrayList<Player> team2;
+
     // ------ End of Game Objects ----- //
 
 
 
+    // Starts up game
     public Game() {
         // Set game settings
         setGameSettings();
@@ -41,6 +45,8 @@ public class Game {
         players = new ArrayList<Player>();
         mixedDeck = new ArrayList<Card>();
         damageDeck = new ArrayList<DealsDamage>();
+        team1 = new ArrayList<Player>();
+        team2 = new ArrayList<Player>();
 
         // Generate the decks
         generateDecks();
@@ -51,6 +57,43 @@ public class Game {
     }
 
     public void run() {
+
+        // Display Players and Teams
+        int index1 = Rand.randomInt(0, 4);
+        int index2 = Rand.randomInt(0, 4);
+        if (index1 != index2) {
+            team1.add(players.get(index1));
+            team1.add(players.get(index2));
+
+            for (int i = 0; i < players.size(); i++) {
+                if (i != index1 && i != index2){
+                    team2.add(players.get(i));
+                }
+            }
+        }
+
+
+        System.out.println("");
+        System.out.println("Players: ");
+        for (int i = 0; i < players.size(); i++) {
+            Player hold = players.get(i);
+            System.out.println(hold.getName());
+        }
+
+        System.out.println("");
+        System.out.println("Team 1: ");
+        for (int i = 0; i < team1.size(); i++) {
+            Player hold = team1.get(i);
+            System.out.println(hold.getName());
+        }
+
+        System.out.println("");
+        System.out.println("Team 2: ");
+        for (int i = 0; i < team2.size(); i++) {
+            Player hold = team2.get(i);
+            System.out.println(hold.getName());
+        }
+
 
         // deal cards to each player
         int cardsAdded = 0;
@@ -136,6 +179,8 @@ public class Game {
             }
 
             Input.waitForUserToPressEnter("\nPress Enter to end " + currentPlayer.getName() + "'s turn.\n");
+            System.out.println("");
+            System.out.println("-------------------------------------------------------------------------------------------------------------------");
         }
 
         // End game: determine which Player had the most points
