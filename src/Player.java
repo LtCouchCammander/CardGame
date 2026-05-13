@@ -20,6 +20,21 @@ public class Player {
         randomCard.play(this, players);
 
         // pick a random player (but not oneself) to apply any additional actions to
+        Player target = chooseTarget(players);
+        // do possible additional damage action
+        if (randomCard instanceof DealsDamage) {
+            DealsDamage damageCard = (DealsDamage)randomCard;
+            damageCard.doDamage(this, target);
+        }
+
+        // do possible additional freeze action
+        if (randomCard instanceof AppliesFreeze) {
+            AppliesFreeze freezeCard = (AppliesFreeze)randomCard;
+            freezeCard.freeze(this, target);
+        }
+    }
+    //Choose a target
+    public Player chooseTarget(ArrayList<Player> players) {
         boolean selectedAnotherPlayer = false;
         Player otherPlayer = null;
 
@@ -30,20 +45,8 @@ public class Player {
                 selectedAnotherPlayer = true;
             }
         }
-
-        // do possible additional damage action
-        if (randomCard instanceof DealsDamage) {
-            DealsDamage damageCard = (DealsDamage)randomCard;
-            damageCard.doDamage(this, otherPlayer);
-        }
-
-        // do possible additional freeze action
-        if (randomCard instanceof AppliesFreeze) {
-            AppliesFreeze freezeCard = (AppliesFreeze)randomCard;
-            freezeCard.freeze(this, otherPlayer);
-        }
+        return otherPlayer;
     }
-
     public boolean hasCardsInHand() {
         return hand.size() > 0;
     }

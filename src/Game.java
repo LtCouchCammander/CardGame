@@ -135,50 +135,69 @@ public class Game {
                 continue; // skips the rest of the body of the loop, and returns to the start of the loop
             }
 
-            // generate a random value to choose a random action
-            float randomValue = Rand.random();
+            // human player chooses their action
+            if (currentPlayer instanceof HumanPlayer) {
+                System.out.println("Choose an action:");
+                System.out.println("1: Play a card from your hand");
+                System.out.println("2: Draw from mixed deck");
+                System.out.println("3: Draw from damage deck");
+                int action = Input.getUserInt("Enter a number: ");
 
-            // 1. play a card from player's hand
-            if (randomValue < playerChancesOfPlayingCard && currentPlayer.hasCardsInHand()) {
-                currentPlayer.playRandomCardFromHand(players);
-            }
-
-            // 2. OR draw a card from mixed deck (but don't play it yet)
-            else if (damageDeck.size() == 0 || (mixedDeck.size() > 0 && randomValue < playerChancesOfPlayingCard + playerChancesOfDrawingFromMixedDeck)) {
-                Object drawnObject = drawRandomCard(mixedDeck);
-                Card drawnCard = (Card)drawnObject;
-                currentPlayer.addCardToHand(drawnCard);
-
-                System.out.println(currentPlayer.getName() + " drew a " + drawnCard + " from the Mixed deck.");
-            }
-
-            // 3. OR draw a card from damage deck and use its damage effect immediately, without getting points
-            else {
-                Object drawnObject = drawRandomCard(damageDeck);
-                DealsDamage damageCard = (DealsDamage)drawnObject;
-
-                System.out.println(currentPlayer.getName() + " drew a " + damageCard + " from the Damage deck.");
-
-                // pick a random player (but not oneself) to apply the damage card to
-                boolean selectedAnotherPlayer = false;
-                Player otherPlayer = null;
-
-                while (!selectedAnotherPlayer) {
-                    int randomPlayerIndex = Rand.randomInt(0, players.size());
-                    otherPlayer = players.get(randomPlayerIndex);
-                    if (otherPlayer != currentPlayer) {
-                        selectedAnotherPlayer = true;
+                if (action == 1) {
+                    currentPlayer.playRandomCardFromHand(players);
+                } else if (action == 2) {
+                    Object drawnObject = drawRandomCard(mixedDeck);
+                    Card drawnCard = (Card) drawnObject;
+                    currentPlayer.addCardToHand(drawnCard);
+                    System.out.println(currentPlayer.getName() + " drew a " + drawnCard + " from the Mixed deck.");
+                } else if (action == 3) {
+                    Object drawnObject = drawRandomCard(damageDeck);
+                    DealsDamage damageCard = (DealsDamage) drawnObject;
+                    System.out.println(currentPlayer.getName() + " drew a " + damageCard + " from the Damage deck.");
+                    Player otherPlayer = currentPlayer.chooseTarget(players);
+                    damageCard.doDamage(currentPlayer, otherPlayer);
+                    if (damageCard instanceof AppliesFreeze) {
+                        AppliesFreeze freezeCard = (AppliesFreeze) damageCard;
+                        freezeCard.freeze(currentPlayer, otherPlayer);
                     }
                 }
 
-                damageCard.doDamage(currentPlayer, otherPlayer);
-                if (damageCard instanceof AppliesFreeze) {
-                    AppliesFreeze freezeCard = (AppliesFreeze)damageCard;
-                    freezeCard.freeze(currentPlayer, otherPlayer);
-                }
-            }
+            } else {
+                // generate a random value to choose a random action
+                float randomValue = Rand.random();
 
-            Input.waitForUserToPressEnter("\nPress Enter to end " + currentPlayer.getName() + "'s turn.\n");
+                // 1. play a card from player's hand
+                if (randomValue < playerChancesOfPlayingCard && currentPlayer.hasCardsInHand()) {
+                    currentPlayer.playRandomCardFromHand(players);
+                }
+
+                // 2. OR draw a card from mixed deck (but don't play it yet)
+                else if (damageDeck.size() == 0 || (mixedDeck.size() > 0 && randomValue < playerChancesOfPlayingCard + playerChancesOfDrawingFromMixedDeck)) {
+                    Object drawnObject = drawRandomCard(mixedDeck);
+                    Card drawnCard = (Card)drawnObject;
+                    currentPlayer.addCardToHand(drawnCard);
+
+                    System.out.println(currentPlayer.getName() + " drew a " + drawnCard + " from the Mixed deck.");
+                }
+
+                // 3. OR draw a card from damage deck and use its damage effect immediately, without getting points
+                else {
+                    Object drawnObject = drawRandomCard(damageDeck);
+                    DealsDamage damageCard = (DealsDamage)drawnObject;
+
+                    System.out.println(currentPlayer.getName() + " drew a " + damageCard + " from the Damage deck.");
+
+                    Player otherPlayer = currentPlayer.chooseTarget(players);
+
+                    damageCard.doDamage(currentPlayer, otherPlayer);
+                    if (damageCard instanceof AppliesFreeze) {
+                        AppliesFreeze freezeCard = (AppliesFreeze)damageCard;
+                        freezeCard.freeze(currentPlayer, otherPlayer);
+                    }
+                }
+
+                Input.waitForUserToPressEnter("\nPress Enter to end " + currentPlayer.getName() + "'s turn.\n");
+            }
             System.out.println("");
             System.out.println("-------------------------------------------------------------------------------------------------------------------");
         }
